@@ -119,11 +119,50 @@ Each stage should preserve what is known, what is uncertain, and what decision s
 
 ### Requirements
 
-- [Claude Code](https://github.com/anthropics/claude-code)
+- [Claude Code](https://github.com/anthropics/claude-code) or [pi](https://pi.dev)
 - Git
 - (Optional) Python + [uv](https://docs.astral.sh/uv/) for Python development
 - (Optional) [Zotero](https://www.zotero.org/) + [Galaxy-Dawn/zotero-mcp](https://github.com/Galaxy-Dawn/zotero-mcp) for literature workflows
 - (Optional) [Obsidian](https://obsidian.md/) for project knowledge-base workflows
+
+### Option 0: pi Package Installation
+
+This repository is also a [pi package](https://pi.dev/packages). It ships the 45 skills and 66 prompt templates directly, without copying files into `~/.claude/`.
+
+```bash
+# global install (user settings)
+pi install git:github.com/EarthanLuo/claude-scholar
+
+# from a local clone
+pi install /path/to/claude-scholar
+
+# project-local install, shared with your team
+pi install -l /path/to/claude-scholar
+```
+
+Verify and update:
+
+```bash
+pi list
+pi update --extensions
+pi remove git:github.com/EarthanLuo/claude-scholar
+```
+
+What pi loads from this package:
+
+| pi resource | Source path | Count |
+|---|---|---|
+| Skills (`/skill:name`) | `skills/**/SKILL.md` | 45 |
+| Prompt templates (`/name`) | `commands/*.md` | 35 |
+| Prompt templates (`/name`) | `commands/sc/*.md` | 31 |
+
+Requirements: pi **0.85.1 or newer**, Node.js **22 or newer**, Git.
+
+pi loads skills and prompt templates only. The Claude Code-specific `agents/`, `hooks/`, and `rules/` directories are not consumed by pi:
+
+- `agents/*.md` are Claude Code subagent definitions. pi has no subagent package convention. Use the matching skills instead, or adapt an agent into a skill.
+- `hooks/*.js` are Claude Code hook scripts. pi extensions use a different API. They are not executed by pi.
+- `rules/*.md` are not auto-loaded as a directory. pi does auto-load `CLAUDE.md` or `AGENTS.md` at startup, so this repository's `CLAUDE.md` is already applied as global guidance when you run pi inside the clone. To apply a rule file in other projects, copy or symlink it as an `AGENTS.md` in the project root, or add its content to `~/.pi/agent/AGENTS.md` for global instructions. See [usage.md](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/usage.md) for context-file loading rules.
 
 ### Option 1: Full Installation (Recommended)
 
